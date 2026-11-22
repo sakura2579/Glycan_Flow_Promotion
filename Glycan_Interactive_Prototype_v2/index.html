@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glycan Flow Simulator | Forward × Inverse</title>
+<meta name="description" content="糖鎖の反応容量を操作し、4つのForward手法とInverse補正を体験する、研究モデルの説明用デモです。">
+<style>
+:root{color-scheme:dark;--bg:#090f1c;--panel:#111c2c;--panel2:#172539;--line:#30465b;--muted:#adc0d1;--white:#eff8ff;--teal:#65ddbf;--gold:#f5c568;--blue:#81a9ec;--coral:#fb937e;--panel-shadow:0 22px 72px rgba(0,0,0,.27);font-family:Inter,'Hiragino Kaku Gothic ProN',Meiryo,ui-sans-serif,system-ui,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--white);background:radial-gradient(ellipse 85% 70% at 10% -20%,#1a3750 0,transparent 70%),radial-gradient(ellipse 65% 60% at 100% 105%,#173344 0,transparent 65%),var(--bg);min-height:100vh}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,.edge-hit:focus-visible{outline:3px solid #f5c568;outline-offset:3px}a{color:var(--teal)}[hidden]{display:none!important}main{max-width:1240px;margin:auto;padding:25px 22px 55px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}.eyebrow{color:var(--teal);font-size:11px;letter-spacing:.16em;font-weight:850;text-transform:uppercase;margin:0 0 8px}.hero h1{font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;line-height:1.3;margin:0 0 8px}.hero .desc{font-size:14px;color:#c6d3e0;line-height:1.6;margin:0;max-width:800px}.demoTag{font-size:12px;color:#f1d8a5;background:#634c2d50;border:1px solid #be965650;padding:9px 12px;border-radius:999px;white-space:nowrap}
+.guides{display:flex;gap:8px;margin:22px 0 15px;flex-wrap:wrap}.guide{border:1px solid #28495a;background:#1734438c;border-radius:10px;padding:9px 13px;font-weight:700;font-size:12px;color:#d6f2eb}.guide b{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:999px;background:#347c77;color:white;margin-right:7px}
+.modebar{display:flex;gap:8px;margin:16px 0}.mode{border:1px solid #3d5565;background:#152437;color:#b5c5d3;padding:11px 18px;border-radius:11px;font-weight:800;font-size:13px;min-height:42px}.mode[aria-pressed="true"]{background:#1d6c69;color:#fff;border-color:#69d7c0;box-shadow:inset 0 0 0 1px #8fe0cd4f}.grid{display:grid;grid-template-columns:minmax(0,1.46fr) minmax(310px,.94fr);gap:16px;align-items:start}.panel{background:linear-gradient(155deg,#152336,#101b2a);border:1px solid #32465a;border-radius:18px;box-shadow:var(--panel-shadow);padding:20px;min-width:0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.section-head h2{font-size:16px;margin:0;letter-spacing:.01em}.small-note{font-size:11px;color:#abc1d1}.tag{font-size:11px;font-weight:800;color:#8cfae1;background:#1c4b4a;border-radius:999px;padding:5px 9px;white-space:nowrap}.network-surface{background:radial-gradient(ellipse at 48% 50%,#203650,#0e1b2c 80%);border:1px solid #304c66;border-radius:14px;padding:3px;overflow:hidden}.network{display:block;width:100%;height:auto;max-height:390px;min-height:245px;overflow:visible}.edge-line{fill:none;stroke:#7fabc3;stroke-linecap:round;transition:stroke .2s,stroke-width .2s,opacity .2s;pointer-events:none}.edge-line.selected{stroke:var(--gold);filter:drop-shadow(0 0 4px #e9b951)}.edge-line.corrected{stroke:var(--coral);filter:drop-shadow(0 0 6px #fb937ea0)}.edge-pulse{fill:none;stroke:#d7fafa;stroke-opacity:.62;stroke-width:2;stroke-linecap:round;stroke-dasharray:2 18;animation:dashflow 1.5s linear infinite;pointer-events:none}.edge-hit{fill:none;stroke:transparent;stroke-width:24px;cursor:pointer}.edge-target{fill:transparent;stroke:transparent;cursor:pointer}.node{fill:#1b3650;stroke:#6bacc8;stroke-width:2}.node.terminal-A{fill:#b58d37;stroke:#f4cb75}.node.terminal-B{fill:#237d75;stroke:#64dfbf}.node.terminal-C{fill:#3e6da7;stroke:#8ebbf7}.node-txt{fill:#e7f7ff;font-size:17px;text-anchor:middle;font-weight:800}.term-txt{font-size:18px}.mini-label{font-size:11px;fill:#b9ccdc}.edge-label{fill:#abc9d6;font-size:11px;font-weight:700;pointer-events:none}.network-legend{display:flex;gap:16px;align-items:center;flex-wrap:wrap;color:#a8bfce;font-size:11px;margin:11px 1px 0}.legend-line{display:inline-block;width:24px;height:5px;border-radius:5px;background:#85a9c8;vertical-align:middle;margin-right:5px}.legend-line.gold{background:var(--gold)}.legend-line.coral{background:var(--coral)}
+.control{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.control-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.control-header h3{font-size:15px;margin:0}.value{color:#ffe0a2;font-weight:850;font-size:20px;font-variant-numeric:tabular-nums}.slider{width:100%;height:8px;accent-color:#62cfc1;cursor:pointer}.range-label{font-size:12px;color:#adc3d1;margin:9px 0 12px;line-height:1.6}.tiny-stats{display:flex;gap:10px;flex-wrap:wrap}.tiny-stat{flex:1;min-width:110px;border:1px solid #2d4960;border-radius:9px;padding:10px 12px;background:#192c3c}.tiny-stat span{display:block;font-size:11px;color:#a8bdcc;margin-bottom:5px}.tiny-stat strong{font-size:19px;font-variant-numeric:tabular-nums}.secondary{color:#d7ebf7;background:#1d3044;border:1px solid #4c6879;border-radius:10px;padding:10px 15px;font-weight:750;font-size:12px;min-height:38px}.secondary:hover{background:#294458}.inverse-intro{padding:15px;background:#192a3b;border:1px solid #365369;border-radius:12px;line-height:1.7}.inverse-intro p{font-size:13px;margin:0 0 10px;color:#c8d6e0}.changeBox{border:1px solid #9b6d4c;background:#4f352e50;border-radius:10px;padding:10px 13px;font-size:13px;margin:12px 0}.changeBox b{color:#ffd394}
+.method-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}.method{font-size:12px;font-weight:850;padding:10px 1px;border-radius:9px;background:#1d2f42;border:1px solid #416073;color:#c7d9e7;min-height:39px}.method[aria-pressed="true"]{background:#1c716c;color:white;border-color:#83dfcc}.method-note{color:#b1c9d5;line-height:1.6;font-size:12px;min-height:35px;margin:10px 0 0}.result-summary{display:flex;gap:10px;margin:17px 0 21px}.result-summary>div{min-width:0;flex:1;background:#1b2d40;border:1px solid #385167;border-radius:10px;padding:10px}.result-summary span{display:block;color:#acc2d0;font-size:11px;margin-bottom:6px}.result-summary strong{font-size:25px;line-height:1.1;font-variant-numeric:tabular-nums}.result-summary em{font-weight:500;font-style:normal;font-size:13px;color:#b9cddd}.subhead{font-size:15px;margin:15px 0 10px}.legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 16px;font-size:11px;color:#c6d5e0}.key{width:11px;height:11px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:5px}.glycan{margin:0 0 18px}.glycan-name{font-size:12px;font-weight:750;margin:0 0 5px;display:flex;justify-content:space-between}.bar-row{display:grid;grid-template-columns:41px 1fr 45px;gap:8px;align-items:center;margin:5px 0}.bar-row label{font-size:11px;color:#aebfce}.bar-row span{font-size:11px;color:#d7e6ef;text-align:right;font-variant-numeric:tabular-nums}.bartrack{height:11px;background:#273b4e;border-radius:5px;overflow:hidden}.barfill{height:100%;width:0;border-radius:5px;transition:width .28s ease}.bar-target{background:#9caaba}.bar-manual{background:#66badd}.bar-auto{background:#60d7b2}.gap-box{border:1px solid #3b6370;background:#16364580;padding:15px 14px;border-radius:12px;margin-top:10px}.gap-box .big{font-size:30px;font-weight:850;line-height:1.3;color:#f7cf83;font-variant-numeric:tabular-nums}.gap-box .small{font-size:12px;color:#c5d9df;line-height:1.6}.action{width:100%;margin-top:16px;background:linear-gradient(100deg,#45a99c,#286e87);border:1px solid #78dcd1;color:white;padding:14px;border-radius:11px;font-weight:850;font-size:14px}.action:hover{filter:brightness(1.1)}.research-note{margin-top:17px;border-top:1px solid #334a59;padding-top:13px;color:#a8c0ce;font-size:11px;line-height:1.7}.research-note details summary{cursor:pointer;color:#d4e6ee;font-weight:800}.research-note p{margin:8px 0 0}.footnote{font-size:12px;color:#bbccda;line-height:1.7;margin-top:17px}.error{color:#ffb7b7;font-size:12px;min-height:1em;margin-top:8px}.pill-ok{color:#94e4d2;font-size:11px}.skip{position:absolute;top:-60px;left:8px;background:#fff;color:#111;padding:8px}.skip:focus{top:5px}
+@keyframes dashflow{to{stroke-dashoffset:-40}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.panel{padding:16px}.network{min-height:0;max-height:none}.hero{align-items:flex-start}.guides{gap:6px}.guide{flex:1 1 170px}.mode{flex:1;padding:11px 8px}.bar-row{grid-template-columns:37px 1fr 44px}}
+@media(max-width:420px){main{padding:15px 10px 40px}.panel{padding:13px}.hero h1{font-size:23px}.guide{font-size:11px}.guide b{margin-right:3px}.tiny-stat strong{font-size:17px}.mode{font-size:12px}.result-summary strong{font-size:22px}}
+</style>
+</head>
+<body>
+<a href="#simulator" class="skip">シミュレーターへ移動</a>
+<main id="simulator">
+  <header class="hero"><div><p class="eyebrow">GLYCAN FLOW · INTERACTIVE DEMO</p><h1>糖鎖の流れを、変えてみよう！</h1><p class="desc">線を操作すると、糖鎖A・B・Cの生成割合が変わります。目標にどこまで近づけられるでしょうか？</p></div><span class="demoTag">研究のしくみを紹介する架空の例</span></header>
+  <div class="guides" aria-label="操作の流れ"><span class="guide"><b>1</b>線をクリック！</span><span class="guide"><b>2</b>容量を変えてみよう！</span><span class="guide"><b>3</b>計算方法も切り替えよう！</span><span class="guide"><b>4</b>目標とのズレを確認！</span></div>
+  <nav class="modebar" aria-label="計算モード"><button id="forwardTab" class="mode" type="button" aria-pressed="true">自分で挑戦（Forward）</button><button id="inverseTab" class="mode" type="button" aria-pressed="false">自動補正を試す（Inverse）</button></nav>
+  <div class="grid">
+    <section class="panel" aria-label="糖鎖ネットワークと反応容量">
+      <div class="section-head"><h2>糖鎖ネットワーク</h2><span class="tag" id="networkState">手動操作中</span></div>
+      <div class="network-surface"><svg class="network" id="network" viewBox="35 88 950 470" role="img" aria-label="クリックできる13本の反応エッジと3種類の終端糖鎖からなる説明用ネットワーク"></svg></div>
+      <div class="network-legend"><span><i class="legend-line gold"></i>選択中</span><span><i class="legend-line"></i>線が太いほど流量が多い</span><span id="inverseLegend" hidden><i class="legend-line coral"></i>容量を補正した反応</span></div>
+      <div class="control" id="forwardControl"><div class="control-header"><h3 id="selectedEdgeLabel">線を選んで調整しよう</h3><strong class="value" id="capacityPercentage">100%</strong></div><input class="slider" type="range" min="0" max="200" value="100" step="1" id="capacitySlider" aria-label="選択中のエッジの基準容量に対する割合"><p class="range-label">線をクリックしてからスライダーを動かそう！ 0%で停止、100%で通常、200%で2倍です。</p><div class="tiny-stats"><div class="tiny-stat"><span>この反応の容量</span><strong id="selectedCapacity">—</strong></div><div class="tiny-stat"><span>この反応を流れる量</span><strong id="selectedFlow">—</strong></div><button class="secondary" type="button" id="reset">↻ リセット</button></div></div>
+      <div class="control" id="inverseControl" hidden><div class="inverse-intro"><p id="inverseMessage">先ほどの手動調整結果と、自動補正の結果を比べてみましょう。</p><button type="button" class="action" id="autoCorrect">✨ 反応容量を自動補正する</button><div class="changeBox" id="capacityChange" hidden>容量を変更したのは <b>E13</b> の1本だけ。<b>58 → 66</b> に調整しました（架空の例）。</div><button type="button" class="secondary" id="backBefore" hidden>補正前の表示に戻す</button></div><p class="range-label">※自動補正は、手動で変更した設定ではなく、最初の基準容量から計算した検証済みの例です。</p></div>
+    </section>
+    <section class="panel" aria-label="最適化と生成割合の比較">
+      <div id="methodsArea"><div class="section-head"><h2>計算方法を選んでみよう</h2><span class="small-note">4つの流し方を比較</span></div><div class="method-grid" id="methods"><button class="method" type="button" data-method="UQ" aria-pressed="false">UQ</button><button class="method" type="button" data-method="CWQ" aria-pressed="true">CWQ</button><button class="method" type="button" data-method="SU" aria-pressed="false">SU</button><button class="method" type="button" data-method="LCRQ" aria-pressed="false">LCRQ</button></div><p class="method-note" id="methodDescription"></p></div>
+      <div id="inverseHeading" hidden><div class="section-head"><h2>自分の結果と自動補正を比べよう</h2><span class="tag">Inverse</span></div><p class="method-note">目標分布を再現できるよう、元の反応容量からの変更をできるだけ小さくします。</p></div>
+      <div class="result-summary"><div><span>最大流量</span><strong id="totalFlow">—</strong></div><div><span id="modeCaption">手動と目標のズレ</span><strong id="gapHeadline">—</strong><em id="gapUnit"> pt</em></div></div>
+      <h2 class="subhead">目標と糖鎖の生成割合</h2>
+      <div class="legend"><span><i class="key bar-target"></i>目標（固定）</span><span><i class="key bar-manual"></i>自分の予測</span><span id="inverseKey" hidden><i class="key bar-auto"></i>自動補正</span></div>
+      <div id="distribution"></div>
+      <div class="gap-box"><div class="small" id="gapHeading">目標まであと</div><div class="big" id="gapNumber">—</div><div class="small" id="gapDescription">小さいほど目標の糖鎖分布に近いことを表します。</div></div>
+      <button type="button" id="toInverse" class="action">✨ Inverseで自動補正してみる</button>
+      <button type="button" id="toForward" class="secondary" style="width:100%;margin-top:15px" hidden>← 手動操作に戻る</button>
+      <div class="research-note"><details><summary>このアプリと研究の関係</summary><p>丸は生成途中の糖鎖、線は反応を表す模式ネットワークです。Forwardでは最大フローを求め、UQ/CWQ/SU/LCRQの4つの目的関数で流量を配分します。Inverseでは、固定した目標分布を再現するよう反応容量を最小限変更した、別の最大フロー解を表示します。Inverseで得られた流量と、補正容量をForwardの4手法に再入力した場合の流量は同一とは限りません。</p></details><p>※ネットワーク・容量・目標分布はすべて説明用の架空データです。実際のTPM・糖鎖実測値ではありません。目標への近さは体験用の指標であり、Forwardの4手法が目標誤差を最小化しているわけではありません。</p></div>
+      <div id="status" class="error" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+  <p class="footnote">先輩のサイトの「線を選ぶ・流量の変化を見る」という体験を残し、2本の研究論文に基づく最適化を簡単なネットワークで紹介する試作版です。公開サイトにはまだ反映していません。</p>
+</main>
+<script>
+(()=>{
+/**
+ * Browser/Node-compatible, dependency-free demonstrator of the two-stage
+ * forward network-flow optimization in the user's supplied Forward paper.
+ * Educational toy network and capacities; not biological / not measured TPM.
+ * THIS IS A VALIDATION PROTOTYPE AND IS NOT INTEGRATED INTO THE PUBLIC SITE.
+ */
+const BASE_EDGES = Object.freeze([
+  ['E1','input','core',120],['E2','core','high',46],
+  ['E3','core','branch',74],['E4','core','stall',34],
+  ['E5','high','branch',44],['E6','high','A',42],
+  ['E7','branch','extend',58],['E8','branch','finish',38],
+  ['E9','stall','finish',40],['E10','extend','A',26],
+  ['E11','extend','B',60],['E12','finish','B',36],
+  ['E13','finish','C',58],
+]);
+const METHODS = Object.freeze(['UQ','CWQ','SU','LCRQ']);
+const INVERSE_TARGET = Object.freeze({A:0.25,B:0.20,C:0.55});
+const SUPPLY_CAPACITY = 120;
+const N=BASE_EDGES.length;
+const NON_TERMINALS = ['input','core','high','branch','stall','extend','finish'];
+const ID_INDEX=Object.fromEntries(BASE_EDGES.map((e,i)=>[e[0],i]));
+const PROFILES = {A:['E6','E10'],B:['E11','E12'],C:['E13']};
+const EQ=NON_TERMINALS.map(node=>BASE_EDGES.map(e=>Number(e[1]===node)-Number(e[2]===node)));
+function maxabs(v){return Math.max(0,...v.map(Math.abs));}
+function dot(a,b){let s=0; for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;}
+function clip(x,low,high){return Math.max(low,Math.min(high,x));}
+function matrixSolve(A,b){
+  // Small dense Gaussian solver with partial pivoting.
+  const n=b.length, aug=A.map((r,i)=>[...r,b[i]]);
+  for(let i=0;i<n;i++){
+    let k=i;for(let j=i+1;j<n;j++)if(Math.abs(aug[j][i])>Math.abs(aug[k][i])) k=j;
+    if(Math.abs(aug[k][i])<1e-14)throw new Error('Linear algebra: singular KKT projection');
+    [aug[k],aug[i]]=[aug[i],aug[k]];
+    const p=aug[i][i];for(let z=i;z<=n;z++)aug[i][z]/=p;
+    for(let j=0;j<n;j++)if(j!==i){const v=aug[j][i];for(let z=i;z<=n;z++)aug[j][z]-=v*aug[i][z];}
+  }
+  return aug.map(r=>r[n]);
+}
+function capacitiesFromPercent(percent={}){
+  const bad=Object.keys(percent).filter(key=>!(key in ID_INDEX));
+  if(bad.length)throw new Error(`Unknown edges: ${bad.join(',')}`);
+  return BASE_EDGES.map(([name,, ,base])=>{
+    const val=percent[name] ?? 100;
+    if(!Number.isFinite(val)||val<0||val>200)throw new Error(`Invalid slider % for ${name}`);
+    return base*(val/100);
+  });
+}
+function maxFlow(cap){
+  // Edmonds-Karp with residual graph; the only source edge has capacity 120.
+  if(!Array.isArray(cap)||cap.length!==N||cap.some(v=>!Number.isFinite(v)||v<0)) throw new Error('Bad capacities');
+  const nodes=['s',...NON_TERMINALS,'A','B','C','t'];
+  const ids=Object.fromEntries(nodes.map((n,i)=>[n,i]));
+  const adj=nodes.map(()=>[]),bioArcs=[];
+  const addArc=(a,b,c)=>{
+    const f={to:ids[b],cap:c,rev:adj[ids[b]].length};
+    const r={to:ids[a],cap:0,rev:adj[ids[a]].length};
+    adj[ids[a]].push(f); adj[ids[b]].push(r);return f;
+  };
+  addArc('s','input',SUPPLY_CAPACITY);
+  BASE_EDGES.forEach((e,i)=>bioArcs.push({arc:addArc(e[1],e[2],cap[i]),original:cap[i]}));
+  for(const terminal of ['A','B','C'])addArc(terminal,'t',SUPPLY_CAPACITY);
+  let F=0;
+  while(true){
+    const prev=new Array(nodes.length).fill(null),q=[ids.s];prev[ids.s]=[-1,-1];
+    for(let h=0;h<q.length&&prev[ids.t]===null;h++){
+      const u=q[h];for(let j=0;j<adj[u].length;j++){
+        const e=adj[u][j];if(e.cap>1e-10&&prev[e.to]===null){prev[e.to]=[u,j];q.push(e.to);}
+      }
+    }
+    if(prev[ids.t]===null)break;
+    let push=Infinity;for(let v=ids.t;v!==ids.s;){const [u,j]=prev[v];push=Math.min(push,adj[u][j].cap);v=u;}
+    for(let v=ids.t;v!==ids.s;){const [u,j]=prev[v],e=adj[u][j];e.cap-=push;adj[v][e.rev].cap+=push;v=u;}
+    F+=push;
+  }
+  return {value:F, flows:bioArcs.map(x=>x.original-x.arc.cap)};
+}
+function objectiveWeights(cap,method){
+  if(!METHODS.includes(method))throw new Error(`Unknown method: ${method}`);
+  const sum={};
+  for(let i=0;i<N;i++)if(cap[i]>1e-12){const from=BASE_EDGES[i][1];sum[from]=(sum[from]||0)+cap[i];}
+  return BASE_EDGES.map((e,i)=>{
+    if(cap[i]<=1e-12)return 0;
+    if(method==='UQ')return 1;
+    if(method==='CWQ')return 1/cap[i];
+    if(method==='SU')return 1/cap[i]**2;
+    return sum[e[1]]/cap[i];
+  });
+}
+function validateForwardResult(cap,result,{tolerance=1e-4}={}){
+  const x=result.flowVector, F=result.maxFlow;
+  const errors={
+    negative:Math.max(0,...x.map(v=>-v)),
+    capacity:Math.max(0,...x.map((v,i)=>v-cap[i])),
+    conservation:maxabs(EQ.map((r,i)=>dot(r,x)-(i===0?F:0))),
+    profileSum:Math.abs(Object.values(result.profile).reduce((s,v)=>s+v,0)-(F<=1e-10?0:1)),
+    optimalTotal:Math.abs(maxFlow(cap).value-F),
+  };
+  if(Object.values(errors).some(v=>!Number.isFinite(v)||v>tolerance))throw new Error(`Flow invalid: ${JSON.stringify(errors)}`);
+  return errors;
+}
+function profileFromFlows(x,F){
+  return Object.fromEntries(Object.entries(PROFILES).map(([term,ids])=>[term,F<=1e-10?0:ids.reduce((s,id)=>s+x[ID_INDEX[id]],0)/F]));
+}
+/**
+ * Convex box-constrained equality QP via split ADMM. Its projection step
+ * enforces conservation and fixed maximum-flow value (within numerical error).
+ * Returns only after checking primal/dual residuals, or fails closed.
+ * The returned distribution is a numerical optimum, NOT a fabricated slider rule.
+ */
+function solveForward(percent={},method='CWQ',options={}){
+  if(!METHODS.includes(method))throw new Error(`Unknown method: ${method}`);
+  const cap=capacitiesFromPercent(percent);
+  const {value:F,flows:feasible}=maxFlow(cap);
+  if(F<=1e-10){const zeros=new Array(N).fill(0);const output={method,maxFlow:0,flowVector:zeros,flows:Object.fromEntries(BASE_EDGES.map((e,i)=>[e[0],0])),profile:{A:0,B:0,C:0},iterations:0};validateForwardResult(cap,output);return output;}
+  const raw=objectiveWeights(cap,method);
+  const scale=Math.max(...raw,1e-12),w=raw.map(v=>v/scale);
+  // Keep augmented penalty moderately high for numerical stability.
+  const rho=options.rho ?? 0.25;
+  const limit=options.maxIterations ?? 20000;
+  const eps=options.epsilon ?? 1e-7;
+  const d=w.map(v=>1/(2*v+rho));
+  const gram=EQ.map(ai=>EQ.map(aj=>ai.reduce((s,v,k)=>s+v*d[k]*aj[k],0)));
+  const b=[F,...new Array(EQ.length-1).fill(0)];
+  let x=[...feasible],z=[...feasible],u=new Array(N).fill(0);
+  let iterations=0,primal=Infinity,dual=Infinity;
+  for(let iteration=0;iteration<limit;iteration++){
+    iterations=iteration+1;
+    const rhs=z.map((v,i)=>rho*(v-u[i]));
+    const dRhs=rhs.map((v,i)=>v*d[i]);
+    const lam=matrixSolve(gram,EQ.map((r,i)=>dot(r,dRhs)-b[i]));
+    x=dRhs.map((v,i)=>v-d[i]*EQ.reduce((s,r,j)=>s+r[i]*lam[j],0));
+    const prev=z;
+    z=x.map((v,i)=>clip(v+u[i],0,cap[i]));
+    u=u.map((v,i)=>v+x[i]-z[i]);
+    primal=maxabs(x.map((v,i)=>v-z[i]));
+    dual=maxabs(z.map((v,i)=>rho*(v-prev[i])));
+    if(primal<=eps&&dual<=eps)break;
+  }
+  if(primal>Math.max(eps*5,5e-7)||dual>Math.max(eps*5,5e-7)){
+    throw new Error(`Forward QP did not converge for ${method}: ${JSON.stringify({primal,dual,iterations,F})}`);
+  }
+  const result={method,maxFlow:F,flowVector:x,flows:Object.fromEntries(BASE_EDGES.map((e,i)=>[e[0],x[i]])),profile:profileFromFlows(x,F),iterations,primalResidual:primal,dualResidual:dual,objective:dot(raw,x.map(v=>v*v))};
+  validateForwardResult(cap,result);
+  return result;
+}
+
+window.GlycanForward={BASE_EDGES,METHODS,INVERSE_TARGET,SUPPLY_CAPACITY,capacitiesFromPercent,maxFlow,objectiveWeights,validateForwardResult,solveForward};
+
+window.GlycanInverseFixture={"type":"synthetic_verified_inverse_fixture","target":{"A":0.25,"B":0.2,"C":0.55},"baselineProfileClosest":{"A":0.2833333333333333,"B":0.23333333333333336,"C":0.48333333333333334},"baselineFlows":{"E1":120.0,"E2":32.01992636850286,"E3":67.98007363149715,"E4":19.999999999999996,"E5":11.847174063889453,"E6":20.172752304613404,"E7":41.827247695386596,"E8":38.0,"E9":19.999999999999996,"E10":13.82724769538659,"E11":28.000000000000004,"E12":6.87569850166847e-16,"E13":58.0},"correctedCapacity":{"E1":120.0,"E2":46.0,"E3":74.0,"E4":34.0,"E5":44.0,"E6":42.0,"E7":58.0,"E8":38.0,"E9":40.0,"E10":26.0,"E11":60.0,"E12":36.0,"E13":66.0},"baselineCapacity":{"E1":120.0,"E2":46.0,"E3":74.0,"E4":34.0,"E5":44.0,"E6":42.0,"E7":58.0,"E8":38.0,"E9":40.0,"E10":26.0,"E11":60.0,"E12":36.0,"E13":58.0},"inverseFlows":{"E1":120.0,"E2":30.0,"E3":62.0,"E4":28.0,"E5":0.0,"E6":30.0,"E7":24.0,"E8":38.0,"E9":28.0,"E10":0.0,"E11":24.0,"E12":0.0,"E13":66.0},"inverseProfile":{"A":0.25,"B":0.2,"C":0.55},"maxFlow":120.0,"residuals":{"flow_conservation_and_profile":0.0,"capacity":0.0,"maximum_flow":0.0,"observed_profile":0.0}};
+})();
+</script>
+<script>
+(()=>{
+// Expects global window.GlycanForward (injected from glycan-solver.mjs)
+// and window.GlycanInverseFixture (Python-verified data).
+const {BASE_EDGES,solveForward,capacitiesFromPercent,maxFlow,validateForwardResult,INVERSE_TARGET}=window.GlycanForward;
+const inv=window.GlycanInverseFixture;
+const coords={input:[90,325],core:[260,325],high:[445,175],branch:[445,325],stall:[445,475],extend:[635,245],finish:[635,405],A:[865,160],B:[865,325],C:[865,490]};
+const names={UQ:'各反応の流量の偏りを抑える方法です。',CWQ:'反応容量が大きい経路を使いやすくする方法です。',SU:'各反応の容量をどれくらい使っているかを考慮します。',LCRQ:'分岐点での反応容量の比率を考慮します。'};
+const ID_LIST=BASE_EDGES.map(x=>x[0]);
+const state={mode:'forward',selected:'E3',percent:{},method:'CWQ',manual:null,adjusted:false};
+const svg=document.getElementById('network');const ns='http://www.w3.org/2000/svg';const $=id=>document.getElementById(id);
+const edges=new Map();let queued=false;
+const el=(tag,attrs={})=>{const item=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))item.setAttribute(k,String(v));return item};
+function pathFor(a,b){const p=coords[a],q=coords[b],dx=q[0]-p[0],dy=q[1]-p[1],len=Math.hypot(dx,dy)||1, ux=dx/len,uy=dy/len;const start=45,end= (['A','B','C'].includes(b)?35:45), sx=p[0]+ux*start,sy=p[1]+uy*start,tx=q[0]-ux*end,ty=q[1]-uy*end;if(Math.abs(tx-sx)<18)return `M${sx.toFixed(1)} ${sy.toFixed(1)} L${tx.toFixed(1)} ${ty.toFixed(1)}`;return `M${sx.toFixed(1)} ${sy.toFixed(1)} C${(sx+72).toFixed(1)} ${sy.toFixed(1)},${(tx-72).toFixed(1)} ${ty.toFixed(1)},${tx.toFixed(1)} ${ty.toFixed(1)}`;}
+for(const [id,a,b] of BASE_EDGES){const d=pathFor(a,b);const g=el('g');const line=el('path',{d,class:'edge-line'});const pulse=el('path',{d,class:'edge-pulse'});const hit=el('path',{d,class:'edge-hit'});const mid=[(coords[a][0]+coords[b][0])/2,(coords[a][1]+coords[b][1])/2];const target=el('circle',{cx:mid[0],cy:mid[1],r:17,class:'edge-target',tabindex:0,role:'button','aria-label':`反応 ${id} を選択`});const title=el('title');title.textContent=`反応 ${id}`;target.append(title);hit.addEventListener('click',()=>pick(id));target.addEventListener('click',()=>pick(id));target.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(id)}});g.append(line,pulse,hit,target);svg.append(g);edges.set(id,{line,pulse,hit,target});}
+for(const [id,point] of Object.entries(coords)){const t=['A','B','C'].includes(id);const shape=el('circle',{cx:point[0],cy:point[1],r:t?32:23,class:t?`node terminal-${id}`:'node'});svg.append(shape);const text=el('text',{x:point[0],y:point[1]+5,class:`node-txt${t?' term-txt':''}`});text.textContent=t?`糖鎖${id}`:({'input':'始点','core':'分岐','high':'中間','branch':'中間','stall':'中間','extend':'中間','finish':'中間'})[id];if(t){text.setAttribute('font-size','13');text.setAttribute('textLength','55');text.setAttribute('lengthAdjust','spacingAndGlyphs');}else{text.setAttribute('font-size','12')}svg.append(text);}
+function gap(profile){return ['A','B','C'].reduce((s,k)=>s+Math.abs(100*(profile[k]-inv.target[k])),0)/2;}
+const fmt = n=>Number.isFinite(n)?n.toFixed(1):'—';
+function pick(id){if(state.mode!=='forward')return;state.selected=id;sync();}
+function getManual(){return solveForward(state.percent,state.method);}
+function setMode(mode){if(mode===state.mode)return;if(mode==='inverse'){try{state.manual=getManual()}catch(e){$('status').textContent='計算中の結果を保存できませんでした：'+e.message;return}state.adjusted=false;}state.mode=mode;sync();}
+function getFlows(){if(state.mode==='forward')return getManual().flows;if(state.adjusted)return inv.inverseFlows;return state.manual.flows;}
+function renderEdges(flows){for(const id of ID_LIST){const f=Math.max(0,flows[id]||0),{line,pulse}=edges.get(id);line.style.strokeWidth=String(2.5+Math.min(16,f/7));line.style.opacity=f<0.01?'0.15':'1';pulse.style.opacity=f<0.1?'0':'0.7';line.classList.toggle('selected',state.mode==='forward'&&id===state.selected);line.classList.toggle('corrected',state.mode==='inverse'&&state.adjusted&&id==='E13');}}
+function bars(predict,auto){$('distribution').replaceChildren();for(const k of ['A','B','C']){const block=document.createElement('section');block.className='glycan';const heading=document.createElement('div');heading.className='glycan-name';heading.textContent='糖鎖 '+k;block.append(heading);const data=[['目標',inv.target[k]*100,'bar-target'],['手動',predict[k]*100,'bar-manual']];if(auto)data.push(['自動',inv.inverseProfile[k]*100,'bar-auto']);for(const [label,n,sty] of data){const row=document.createElement('div');row.className='bar-row';const tx=document.createElement('label');tx.textContent=label;const track=document.createElement('div');track.className='bartrack';const fill=document.createElement('div');fill.className='barfill '+sty;fill.style.width=`${Math.max(0,Math.min(100,n))}%`;track.append(fill);const value=document.createElement('span');value.textContent=`${fmt(n)}%`;row.append(tx,track,value);block.append(row)}$('distribution').append(block)}}
+function render(){try{const isInv=state.mode==='inverse';$('forwardTab').setAttribute('aria-pressed',String(!isInv));$('inverseTab').setAttribute('aria-pressed',String(isInv));$('forwardControl').hidden=isInv;$('inverseControl').hidden=!isInv;$('methodsArea').hidden=isInv;$('inverseHeading').hidden=!isInv;$('inverseKey').hidden=!(isInv&&state.adjusted);$('inverseLegend').hidden=!(isInv&&state.adjusted);$('toInverse').hidden=isInv;$('toForward').hidden=!isInv;$('networkState').textContent=isInv?(state.adjusted?'補正後の流量':'手動調整の結果'):'手動操作中';$('modeCaption').textContent=isInv?'手動のズレ':'目標とのズレ';$('methodDescription').textContent=names[state.method];for(const btn of $('methods').querySelectorAll('[data-method]'))btn.setAttribute('aria-pressed',String(btn.dataset.method===state.method));
+let manual=isInv?state.manual:getManual();if(!manual)manual=getManual();const flows=isInv&&state.adjusted?inv.inverseFlows:manual.flows;renderEdges(flows);const profile=manual.profile;const manualGap=manual.maxFlow>0?gap(profile):null;
+$('totalFlow').textContent=fmt(isInv&&state.adjusted?inv.maxFlow:manual.maxFlow);
+$('gapHeadline').textContent=manualGap==null?'—':fmt(manualGap);$('gapUnit').textContent=manualGap==null?'':' pt';
+if(isInv){$('autoCorrect').hidden=state.adjusted;$('backBefore').hidden=!state.adjusted;$('capacityChange').hidden=!state.adjusted;$('inverseMessage').textContent=state.adjusted?'基準容量からの補正で、目標分布を再現しました。':''+'あなたの手動結果と、基準容量から最適化した補正結果を比較できます。';$('gapHeading').textContent=state.adjusted?'自動補正後の目標との差':'手動調整での目標との差';$('gapNumber').textContent=state.adjusted?`${fmt(gap(inv.inverseProfile))} pt`:(manualGap===null?'—':`${fmt(manualGap)} pt`);$('gapDescription').textContent=state.adjusted?`あなたの結果：${manualGap===null?'—':fmt(manualGap)+' pt'} ／ 自動補正：${fmt(gap(inv.inverseProfile))} pt（基準容量から計算）`:'「反応容量を自動補正する」を押すと、容量と流量が変わります。';bars(profile,state.adjusted);
+}else{const percent=state.percent[state.selected]??100,idx=ID_LIST.indexOf(state.selected),cap=capacitiesFromPercent(state.percent);$('selectedEdgeLabel').textContent=`反応 ${state.selected} の容量を変えよう`;$('capacityPercentage').textContent=`${percent}%`;$('capacitySlider').value=String(percent);$('selectedCapacity').textContent=fmt(cap[idx]);$('selectedFlow').textContent=fmt(manual.flows[state.selected]);$('gapHeading').textContent='目標まであと';$('gapNumber').textContent=manualGap==null?'—':`${fmt(manualGap)} pt`;$('gapDescription').textContent=manualGap==null?'総流量が0のため、生成割合は計算できません。':'差は糖鎖A/B/Cの割合のずれをまとめた値です。小さいほど目標に近づきます。';bars(profile,false);
+}
+$('status').textContent='';}catch(e){$('status').textContent='計算できませんでした：'+e.message;}}
+function sync(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render()})}
+$('capacitySlider').addEventListener('input',e=>{state.percent[state.selected]=Number(e.target.value);sync()});
+for(const btn of $('methods').querySelectorAll('[data-method]'))btn.addEventListener('click',()=>{state.method=btn.dataset.method;sync()});
+$('reset').addEventListener('click',()=>{state.percent={};state.selected='E3';state.method='CWQ';sync()});
+$('forwardTab').addEventListener('click',()=>setMode('forward'));$('inverseTab').addEventListener('click',()=>setMode('inverse'));$('toInverse').addEventListener('click',()=>setMode('inverse'));$('toForward').addEventListener('click',()=>setMode('forward'));
+$('autoCorrect').addEventListener('click',()=>{state.adjusted=true;sync()});$('backBefore').addEventListener('click',()=>{state.adjusted=false;sync()});
+render();
+
+})();
+</script>
+</body>
+</html>
