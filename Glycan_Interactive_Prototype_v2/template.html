@@ -218,6 +218,42 @@ a {color:#0d736a}
   .compare-panel {max-height:68dvh;overflow-y:auto}
 }
 
+
+/* v7: Inverseは「なぜ→何を補正→どう再現」の順で見せる（ライトテーマ） */
+.inverse-intro{padding:17px;background:#f6fafc;border:1px solid #cfe3ed;border-radius:13px}
+.inverse-intro .inverse-lead{font-size:15px;font-weight:850;color:#224d64;margin:0 0 6px}
+.inverse-intro #inverseMessage{font-size:12px;line-height:1.65;color:#617785;margin-bottom:13px}
+.inverse-step{border-radius:11px;padding:13px 14px;margin:10px 0 12px;background:white;border:1px solid #d9e8ed}
+.inverse-step h3{margin:0 0 9px;display:flex;align-items:center;gap:8px;color:#245367;font-size:14px;line-height:1.5}
+.inverse-stepnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0;background:#2c9686;color:#fff;border-radius:50%;font-size:12px;font-weight:900}
+.inverse-step p{color:#536f7d;font-size:12px;line-height:1.7;margin:8px 0 0}
+.inverse-step p strong{color:#234b62;font-weight:850}
+.inverse-equation{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;border:1px solid #d8e8e8;border-radius:9px;padding:11px 10px;background:#eff8f6;font-size:12px;font-variant-numeric:tabular-nums;color:#3a6470}
+.inverse-equation b{color:#255b65}
+.inverse-equation-sign{font-weight:850;color:#7b96a1}
+.inverse-equation>strong{font-size:17px;color:#177b6d;white-space:nowrap}
+.inverse-intro #autoCorrect{margin-top:9px}
+.inverse-capacity{border-color:#b9ded5;background:#f8fffc}
+.inverse-cap-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 10px;font-size:13px;color:#244d62}
+.inverse-cap-delta{color:#b15e34;font-size:12px;font-weight:800;background:#fff2e8;padding:4px 8px;border-radius:999px;white-space:nowrap}
+.inverse-cap-row{display:grid;grid-template-columns:51px minmax(0,1fr) 35px;gap:10px;align-items:center;margin:8px 0;font-size:12px;color:#4d6d7c}
+.inverse-cap-row>strong{text-align:right;color:#214b62;font-variant-numeric:tabular-nums;font-size:16px}
+.inverse-cap-track{background:#e5edf2;border-radius:999px;overflow:hidden;height:14px}
+.inverse-cap-track i{display:block;height:100%;width:0;background:#88aabc;transition:width .3s ease;border-radius:999px}
+.inverse-cap-track i.corrected{background:#d77a50}
+.inverse-step p.inverse-no-other{color:#567b73;font-size:11px;font-weight:750;margin-top:10px}
+.inverse-fixture-note{font-size:11px;line-height:1.65}
+.inverse-result-note{display:flex;flex-direction:column;gap:5px;background:#eaf8f2;border:1px solid #b4dfce;border-radius:11px;padding:12px 14px;color:#225a4b;line-height:1.6;margin:-1px 0 13px}
+.inverse-result-note>strong{font-size:13px;color:#177260}
+.inverse-step3-heading{display:flex;gap:8px;align-items:center}
+.inverse-result-note>span{font-size:11px}
+.inverse-result-note b{font-weight:850}
+body:not(.forward-screen) .network-legend{margin-bottom:12px}
+body:not(.forward-screen) .result-summary{margin:14px 0 16px}
+body:not(.forward-screen) .glycan{margin-bottom:13px}
+body:not(.forward-screen) .gap-box{padding:11px 13px;margin-top:8px}
+@media(max-width:420px){.inverse-intro{padding:11px}.inverse-step{padding:10px}.inverse-equation{font-size:11px;gap:3px}.inverse-equation>strong{font-size:15px}.inverse-cap-row{gap:6px}}
+
 </style>
 </head>
 <body>
@@ -233,15 +269,37 @@ a {color:#0d736a}
       <div class="network-surface"><svg class="network" id="network" viewBox="35 145 950 360" role="img" aria-label="クリックできる13本の反応エッジと3種類の終端糖鎖からなる説明用ネットワーク"></svg></div>
       <div class="network-legend"><span><i class="legend-line gold"></i>選択中</span><span><i class="legend-line"></i>線が太いほど流量が多い</span><span id="inverseLegend" hidden><i class="legend-line coral"></i>容量を補正した反応</span></div>
       <div class="control" id="forwardControl"><div class="control-header"><h3 id="selectedEdgeLabel">線を選んで調整しよう</h3><strong class="value" id="capacityPercentage">100%</strong></div><input class="slider" type="range" min="0" max="200" value="100" step="1" id="capacitySlider" aria-label="選択中のエッジの基準容量に対する割合"><div class="range-ticks" aria-hidden="true"><span>0%（停止）</span><span>100%（基準）</span><span>200%（2倍）</span></div><p class="range-label">この値は初期容量に対する倍率です。容量を仮想的に変更する説明用シミュレーションです。</p><div class="tiny-stats"><div class="tiny-stat"><span>この反応の容量</span><strong id="selectedCapacity">—</strong></div><div class="tiny-stat"><span>この反応を流れる量</span><strong id="selectedFlow">—</strong></div><button class="secondary" type="button" id="reset">↻ リセット</button></div></div>
-      <div class="control" id="inverseControl" hidden><div class="inverse-intro"><p id="inverseMessage">基準容量からの変更を最小にして、目標分布を再現する補正を求めた例を見てみましょう。</p><button type="button" class="action" id="autoCorrect">✨ 反応容量を自動補正する</button><div class="changeBox" id="capacityChange" hidden>容量を変更したのは <b>E13</b> の1本だけ。<b>58 → 66</b> に調整しました（架空の例）。</div><button type="button" class="secondary" id="backBefore" hidden>補正前の表示に戻す</button></div><p class="range-label">※自動補正は、手動で変更した設定ではなく、最初の基準容量から計算した検証済みの例です。</p></div>
+      <div class="control" id="inverseControl" hidden>
+        <div class="inverse-intro">
+          <p class="inverse-lead">目標の割合から、必要な反応容量を逆算</p>
+          <p id="inverseMessage">基準容量からの変更をできるだけ小さくし、目標分布を再現できる流量を求める例です。</p>
+          <div class="inverse-step inverse-reason">
+            <h3><span class="inverse-stepnum">1</span>なぜ反応 E13 を変えるの？</h3>
+            <p>糖鎖Cを目標の <strong id="inverseTargetPercentC">55%</strong> 生成したいとします。</p>
+            <div class="inverse-equation"><span>最大流量 <b id="inverseTotalSupply">120</b></span><span class="inverse-equation-sign">×</span><span><b id="inverseTargetPctMath">55%</b></span><span class="inverse-equation-sign">=</span><strong><span id="inverseRequiredC">66</span> 必要</strong></div>
+            <p>ところが、糖鎖Cに入る唯一の反応 E13 の基準容量は <strong id="inverseBaselineE13">58</strong>。このままでは66の流量を通せません。</p>
+          </div>
+          <button type="button" class="action" id="autoCorrect">✨ Inverseで求めた補正例を見る</button>
+          <div class="inverse-step inverse-capacity" id="capacityChange" hidden>
+            <h3><span class="inverse-stepnum">2</span>最適化で変わった容量</h3>
+            <div class="inverse-cap-heading"><strong>反応 E13</strong><span class="inverse-cap-delta" id="inverseDeltaCapacity">+8（+13.8%）</span></div>
+            <div class="inverse-cap-row"><span>補正前</span><div class="inverse-cap-track"><i id="inverseCapBeforeBar"></i></div><strong id="inverseCapBefore">58</strong></div>
+            <div class="inverse-cap-row"><span>補正後</span><div class="inverse-cap-track"><i class="corrected" id="inverseCapAfterBar"></i></div><strong id="inverseCapAfter">66</strong></div>
+            <p class="inverse-no-other">ほかの12本の反応容量は変更していません。</p>
+          </div>
+          <button type="button" class="secondary" id="backBefore" hidden>↻ 補正前の表示に戻す</button>
+        </div>
+        <p class="range-label inverse-fixture-note">※手動の調整結果から計算するのではなく、初期容量について事前に最適化・検証した結果を表示しています。数値はすべて説明用の架空の例です。</p>
+      </div>
     </section>
     <section class="panel" aria-label="最適化と生成割合の比較">
       <div id="methodsArea"><div class="section-head"><h2>計算方法を選んでみよう</h2><span class="small-note">現在の容量で計算</span></div><div class="method-grid" id="methods"><button class="method" type="button" data-method="UQ" aria-pressed="false">UQ</button><button class="method" type="button" data-method="CWQ" aria-pressed="true">CWQ</button><button class="method" type="button" data-method="SU" aria-pressed="false">SU</button><button class="method" type="button" data-method="LCRQ" aria-pressed="false">LCRQ</button></div><p class="method-note" id="methodDescription"></p><p class="method-prompt" id="methodPrompt">最初は容量を動かしてみよう。あとで手法を変えると、同じ容量でも結果が変わります。</p><button type="button" class="compare-button" id="compareMethods" aria-expanded="false" aria-controls="methodComparison">４手法を同じ初期容量で比較する</button><section id="methodComparison" class="compare-panel" hidden aria-label="初期容量での４手法比較"><h3>同じ容量でも、流れ方が変わる</h3><p class="compare-hint">すべての線を初期値100%にした条件で比較しています。手動で変えた容量や選択中の手法は変わりません。</p><div class="compare-legend"><span><i class="compare-key compare-A"></i>糖鎖A</span><span><i class="compare-key compare-B"></i>糖鎖B</span><span><i class="compare-key compare-C"></i>糖鎖C</span></div><div id="comparisonResults"></div><p class="compare-caution">※架空のネットワークでの計算結果です。「どの手法が優れているか」の順位ではなく、配分の違いを示します。</p></section></div>
-      <div id="inverseHeading" hidden><div class="section-head"><h2>自分の結果と自動補正を比べよう</h2><span class="tag">Inverse</span></div><p class="method-note">目標分布を再現できるよう、元の反応容量からの変更をできるだけ小さくします。</p></div>
+      <div id="inverseHeading" hidden><div class="section-head"><h2>目標の割合を再現できた？</h2><span class="tag">Inverse</span></div><p class="method-note">青は手動での予測、緑はInverseが求めた再現可能な流量です。灰色の目標と比べてみましょう。</p></div>
       <div class="result-summary"><div><span>最大流量</span><strong id="totalFlow">—</strong></div><div><span id="modeCaption">手動と目標のズレ</span><strong id="gapHeadline">—</strong><em id="gapUnit"> pt</em></div></div>
       <h2 class="subhead">目標と糖鎖の生成割合</h2>
       <div class="legend"><span><i class="key bar-target"></i>目標（固定）</span><span><i class="key bar-manual"></i>自分の予測</span><span id="inverseKey" hidden><i class="key bar-auto"></i>自動補正</span></div>
       <div id="distribution"></div>
+      <div class="inverse-result-note" id="inverseResultNote" hidden role="status"><strong class="inverse-step3-heading"><span class="inverse-stepnum">3</span>目標分布を再現できました！</strong><span>糖鎖Cに必要な <b id="inverseResultRequiredC">66</b> の流量を通せるよう、E13の容量を補正しました。<b>最大流量 <span id="inverseResultTotalFlow">120</span> は維持</b>しています。</span></div>
       <div class="gap-box"><div class="small" id="gapHeading">目標まであと</div><div class="big" id="gapNumber">—</div><div class="small" id="gapDescription">小さいほど目標の糖鎖分布に近いことを表します。</div><p class="change-feedback" id="changeFeedback" role="status" aria-live="polite">まずは黄色い線を動かしてみましょう！</p></div>
       <div class="inverse-nudge" id="inverseNudge"><strong>目標の糖鎖分布を再現するには、どの反応容量を変えればいい？</strong><span>Inverseでは、目標分布から必要な容量の補正を数理最適化で求めます。</span></div>
       <button type="button" id="toInverse" class="action">✨ Inverseで容量を逆算してみる</button>

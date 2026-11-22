@@ -2,6 +2,29 @@
 // and window.GlycanInverseFixture (Python-verified data).
 const {BASE_EDGES,solveForward,capacitiesFromPercent,maxFlow,validateForwardResult,INVERSE_TARGET}=window.GlycanForward;
 const inv=window.GlycanInverseFixture;
+// Inverse画面の説明数値は検証済みfixtureから取得（手入力の数字と不整合にしない）。
+const correctionId='E13';
+const originalCorrection=inv.baselineCapacity[correctionId];
+const correctedCorrection=inv.correctedCapacity[correctionId];
+const requiredTerminalC=inv.maxFlow*inv.target.C;
+const numberLabel=n=>Number.isInteger(n)?String(n):n.toFixed(1);
+function initInverseExplanation(){
+  $('inverseTotalSupply').textContent=numberLabel(inv.maxFlow);
+  $('inverseTargetPercentC').textContent=(inv.target.C*100).toFixed(0)+'%';
+  $('inverseTargetPctMath').textContent=(inv.target.C*100).toFixed(0)+'%';
+  $('inverseRequiredC').textContent=numberLabel(requiredTerminalC);
+  $('inverseResultRequiredC').textContent=numberLabel(requiredTerminalC);
+  $('inverseResultTotalFlow').textContent=numberLabel(inv.maxFlow);
+  $('inverseBaselineE13').textContent=numberLabel(originalCorrection);
+  $('inverseCapBefore').textContent=numberLabel(originalCorrection);
+  $('inverseCapAfter').textContent=numberLabel(correctedCorrection);
+  const delta=correctedCorrection-originalCorrection;
+  $('inverseDeltaCapacity').textContent='+'+numberLabel(delta)+'（+'+(delta/originalCorrection*100).toFixed(1)+'%）';
+  const barLimit=Math.max(originalCorrection,correctedCorrection)*1.16;
+  $('inverseCapBeforeBar').style.width=(100*originalCorrection/barLimit)+'%';
+  $('inverseCapAfterBar').style.width=(100*correctedCorrection/barLimit)+'%';
+}
+
 const coords={input:[90,325],core:[260,325],high:[445,198],branch:[445,325],stall:[445,449],extend:[635,258],finish:[635,392],A:[865,185],B:[865,325],C:[865,461]};
 const names={UQ:'各反応の流量の偏りを抑える方法です。',CWQ:'反応容量が大きい経路を使いやすくする方法です。',SU:'各反応の容量をどれくらい使っているかを考慮します。',LCRQ:'分岐点での反応容量の比率を考慮します。'};
 const ID_LIST=BASE_EDGES.map(x=>x[0]);
@@ -61,7 +84,7 @@ function render(){try{const isInv=state.mode==='inverse';document.body.classList
 $('firstTip').hidden=isInv;
 $('changeFeedback').hidden=isInv;
 $('inverseNudge').hidden=isInv;
-$('inverseNudgeFoot').hidden=isInv;
+$('inverseNudgeFoot').hidden=isInv;$('inverseResultNote').hidden=!isInv||!state.adjusted;
 if(!isInv){
   $('firstTipTitle').textContent=state.hasAdjusted?'💡 ほかの線や計算方法も試してみよう！':'💡 まず黄色い線 E13 の容量を増やしてみよう！';
   $('firstTipDetail').textContent=state.hasAdjusted?'黄色の線を選んで容量を変えると、予測分布がどう変わるか確かめられます。':'100%から150%に動かすと、目標に少し近づきます。';
@@ -71,7 +94,7 @@ for(const btn of $('methods').querySelectorAll('[data-method]'))btn.setAttribute
 let manual=isInv?state.manual:getManual();if(!manual)manual=getManual();const flows=isInv&&state.adjusted?inv.inverseFlows:manual.flows;renderEdges(flows);const profile=manual.profile;const manualGap=manual.maxFlow>0?gap(profile):null;
 $('totalFlow').textContent=fmt(isInv&&state.adjusted?inv.maxFlow:manual.maxFlow);
 $('gapHeadline').textContent=manualGap==null?'—':fmt(manualGap);$('gapUnit').textContent=manualGap==null?'':' pt';
-if(isInv){$('autoCorrect').hidden=state.adjusted;$('backBefore').hidden=!state.adjusted;$('capacityChange').hidden=!state.adjusted;$('inverseMessage').textContent=state.adjusted?'基準容量から容量変更を最小限にした補正例で、目標分布を再現する流量を表示しています。':'目標分布を再現する反応容量の補正を、基準容量から数理最適化で求めた例を見てみましょう。';$('gapHeading').textContent=state.adjusted?'自動補正後の目標との差':'手動調整での目標との差';$('gapNumber').textContent=state.adjusted?`${fmt(gap(inv.inverseProfile))} pt`:(manualGap===null?'—':`${fmt(manualGap)} pt`);$('gapDescription').textContent=state.adjusted?`あなたの結果：${manualGap===null?'—':fmt(manualGap)+' pt'} ／ 自動補正：${fmt(gap(inv.inverseProfile))} pt（基準容量から計算）`:'「反応容量を自動補正する」を押すと、容量と流量が変わります。';bars(profile,state.adjusted);
+if(isInv){$('autoCorrect').hidden=state.adjusted;$('backBefore').hidden=!state.adjusted;$('capacityChange').hidden=!state.adjusted;$('inverseMessage').textContent=state.adjusted?'基準容量から変更量を最小にする補正例を表示中です。':'目標の分布を再現できる流量を求めるため、必要な容量を逆算した例です。';$('inverseResultNote').hidden=!state.adjusted;$('modeCaption').textContent=state.adjusted?'補正例の目標との差':'手動と目標のズレ';$('gapHeadline').textContent=state.adjusted?fmt(gap(inv.inverseProfile)):(manualGap===null?'—':fmt(manualGap));$('gapHeading').textContent=state.adjusted?'目標を再現した流量のズレ':'手動調整での目標との差';$('gapNumber').textContent=state.adjusted?`${fmt(gap(inv.inverseProfile))} pt`:(manualGap===null?'—':`${fmt(manualGap)} pt`);$('gapDescription').textContent=state.adjusted?`手動結果のズレ：${manualGap===null?'—':fmt(manualGap)+' pt'}。これは目標を満たす流量の例で、補正容量を使ったForwardの4手法の再計算結果ではありません。`:'左の「補正例を見る」を押すと、どの容量を変更する必要があったのか表示します。';bars(profile,state.adjusted);
 }else{const percent=state.percent[state.selected]??100,idx=ID_LIST.indexOf(state.selected),cap=capacitiesFromPercent(state.percent);$('selectedEdgeLabel').textContent=`反応 ${state.selected} の容量を変えよう`;$('capacityPercentage').textContent=`${percent}%`;$('capacitySlider').value=String(percent);$('selectedCapacity').textContent=fmt(cap[idx]);$('selectedFlow').textContent=fmt(manual.flows[state.selected]);$('gapHeading').textContent='目標まであと';$('gapNumber').textContent=manualGap==null?'—':`${fmt(manualGap)} pt`;$('gapDescription').textContent=manualGap==null?'総流量が0のため、生成割合は計算できません。':'差は糖鎖A/B/Cの割合のずれをまとめた値です。小さいほど目標に近づきます。';showFeedback(state.referenceGap===null?state.feedback:feedbackFrom(state.referenceGap,manualGap,'容量変更'));bars(profile,false);
 }
 $('status').textContent='';}catch(e){$('status').textContent='計算できませんでした：'+e.message;}}
@@ -111,4 +134,5 @@ $('reset').addEventListener('click',()=>{
 });
 $('forwardTab').addEventListener('click',()=>setMode('forward'));$('inverseTab').addEventListener('click',()=>setMode('inverse'));$('toInverse').addEventListener('click',()=>setMode('inverse'));$('toForward').addEventListener('click',()=>setMode('forward'));
 $('autoCorrect').addEventListener('click',()=>{state.adjusted=true;sync()});$('backBefore').addEventListener('click',()=>{state.adjusted=false;sync()});
+initInverseExplanation();
 render();

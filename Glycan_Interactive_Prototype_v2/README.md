@@ -1,4 +1,4 @@
-# Glycan Flow Simulator — ライトテーマ・デスクトップ1画面版 v6
+# Glycan Flow Simulator — ライトテーマ・Inverse説明強化版 v7
 
 GitHub上での保存先は、**既存の `Glycan_Interactive_Prototype_v2` フォルダ**です。バージョンが上がってもフォルダ名を増やさず、同じ場所のファイルを更新するため、ZIP内もこの名前にしています。
 
@@ -9,6 +9,15 @@ GitHub上での保存先は、**既存の `Glycan_Interactive_Prototype_v2` フ�
 3. 目標との差が **31.9 → 26.9 pt** と小さくなり、「4.9ポイント近づきました」と表示されます（丸めにより小数が変わることがあります）。
 4. **UQ / CWQ / SU / LCRQ** を押すと、容量設定を保ったまま配分が変わります。
 5. 「Inverseで容量を逆算してみる」から、固定目標を再現する容量補正の例を表示します。
+
+## v7: Inverseを「理由→容量補正→結果」で説明
+
+- 補正前に、糖鎖Cへ **120×55%=66** の流量が必要なことを図解しました。糖鎖Cに入る唯一のE13は基準容量58なので、初期容量では目標を再現できないことを説明します。
+- ボタンを押すと、E13容量 **58→66（+8、+13.8%）** の棒グラフを表示し、ほかの12本は変更されないことを示します。
+- 終端糖鎖の割合の3系列（目標、手動予測、Inverseで実現可能な流量）を比較し、固定した目標を再現したこと、最大流量120を維持したことを明記します。
+- Inverseに切り替えた後、上部のズレ欄が補正後の**0.0 pt**を表示するように修正しました。補正前は手動予測のズレを表示します。
+- **動的ソルバーは追加していません**。補正値は検証済みの固定フィクスチャを使用します。現在の手動操作を使って逆算したと誤解されない説明を残しています。
+- ブラウザ上の計算コア、Forwardの4手法、固定された逆補正値は一切変更していません。説明数値はできるだけ`inverse_fixture.json`から表示し、検証を追加しました。
 
 ## v3からv4で変更した点
 
@@ -42,7 +51,7 @@ GitHub上での保存先は、**既存の `Glycan_Interactive_Prototype_v2` フ�
 - `build_offline.py`：`python build_offline.py` で1ファイルHTMLを再生成。
 - `oracle_trust_constr.json`：独立検証の基準値。
 - `tests/`：Nodeの数値テストとPlaywrightの画面テスト。
-- `preview_forward_compact.png`, `preview_comparison_compact.png`, `preview_mobile_compact.png`：今回の画面確認画像。
+- `preview_inverse_before_v7.png`, `preview_inverse_explained_v7.png`, `preview_inverse_mobile_v7.png`：今回のInverse画面確認画像。
 
 ## テスト
 
@@ -51,13 +60,14 @@ node tests/test.mjs
 node tests/test_inverse_fixture.mjs
 python tests/test_ui.py
 python tests/test_viewport.py
+python tests/test_inverse_explanation.py
 ```
 
 最初の2件は数値テスト、3・4件目はChromium/PlaywrightによるUI検証（Playwright環境が必要）です。ガイドと改善判定の検証、Forward/Inverse切り替え、容量0、スマホ幅などを確認済みです。
 
 ## GitHub
 
-まだGitHubには今回のv6を反映していません。公開中の `main` ブランチも未変更です。確認後に、`feature/optimization-prototype` 内の **既存の `Glycan_Interactive_Prototype_v2` フォルダのファイルを置き換える**形で保存してください。新しくv6フォルダを増やさなくて大丈夫です。
+GitHubには今回のv7をまだ反映していません。v6は作業用ブランチに保存済みで、公開中の `main` ブランチは未変更です。確認後に、`feature/optimization-prototype` 内の **既存の `Glycan_Interactive_Prototype_v2` フォルダのファイルを置き換える**形で保存してください。新しくv7フォルダを増やさなくて大丈夫です。
 
 ## 今回の文章調整
 
