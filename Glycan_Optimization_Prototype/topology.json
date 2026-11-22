@@ -1,0 +1,161 @@
+{
+  "type": "synthetic_explanatory_glycan_network",
+  "not_real_tpm": true,
+  "not_actual_glycan_reactions": true,
+  "nodes": [
+    {
+      "id": "input",
+      "x": 90,
+      "y": 325
+    },
+    {
+      "id": "core",
+      "x": 260,
+      "y": 325
+    },
+    {
+      "id": "high",
+      "x": 445,
+      "y": 175
+    },
+    {
+      "id": "branch",
+      "x": 445,
+      "y": 325
+    },
+    {
+      "id": "stall",
+      "x": 445,
+      "y": 475
+    },
+    {
+      "id": "extend",
+      "x": 635,
+      "y": 245
+    },
+    {
+      "id": "finish",
+      "x": 635,
+      "y": 405
+    },
+    {
+      "id": "A",
+      "x": 865,
+      "y": 160
+    },
+    {
+      "id": "B",
+      "x": 865,
+      "y": 325
+    },
+    {
+      "id": "C",
+      "x": 865,
+      "y": 490
+    }
+  ],
+  "edges": [
+    {
+      "id": "E1",
+      "from": "input",
+      "to": "core",
+      "base_capacity": 120.0
+    },
+    {
+      "id": "E2",
+      "from": "core",
+      "to": "high",
+      "base_capacity": 46.0
+    },
+    {
+      "id": "E3",
+      "from": "core",
+      "to": "branch",
+      "base_capacity": 74.0
+    },
+    {
+      "id": "E4",
+      "from": "core",
+      "to": "stall",
+      "base_capacity": 34.0
+    },
+    {
+      "id": "E5",
+      "from": "high",
+      "to": "branch",
+      "base_capacity": 44.0
+    },
+    {
+      "id": "E6",
+      "from": "high",
+      "to": "A",
+      "base_capacity": 42.0
+    },
+    {
+      "id": "E7",
+      "from": "branch",
+      "to": "extend",
+      "base_capacity": 58.0
+    },
+    {
+      "id": "E8",
+      "from": "branch",
+      "to": "finish",
+      "base_capacity": 38.0
+    },
+    {
+      "id": "E9",
+      "from": "stall",
+      "to": "finish",
+      "base_capacity": 40.0
+    },
+    {
+      "id": "E10",
+      "from": "extend",
+      "to": "A",
+      "base_capacity": 26.0
+    },
+    {
+      "id": "E11",
+      "from": "extend",
+      "to": "B",
+      "base_capacity": 60.0
+    },
+    {
+      "id": "E12",
+      "from": "finish",
+      "to": "B",
+      "base_capacity": 36.0
+    },
+    {
+      "id": "E13",
+      "from": "finish",
+      "to": "C",
+      "base_capacity": 58.0
+    }
+  ],
+  "auxiliary": {
+    "supply_edge": {
+      "from": "s",
+      "to": "input",
+      "capacity": 120
+    },
+    "terminal_edges": [
+      {
+        "from": "A",
+        "to": "t",
+        "capacity": "infinity"
+      },
+      {
+        "from": "B",
+        "to": "t",
+        "capacity": "infinity"
+      },
+      {
+        "from": "C",
+        "to": "t",
+        "capacity": "infinity"
+      }
+    ]
+  }
+}

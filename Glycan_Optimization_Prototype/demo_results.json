@@ -1,0 +1,554 @@
+{
+  "metadata": {
+    "kind": "synthetic_educational_example",
+    "source": "predecessor-demo-topology; supplied IEEM2026 manuscripts",
+    "supply": 120.0
+  },
+  "observed_profile": {
+    "A": 0.25,
+    "B": 0.2,
+    "C": 0.55
+  },
+  "forward": {
+    "UQ": {
+      "method": "UQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 42.88757994394624,
+        "core->branch": 45.32429264396319,
+        "core->stall": 31.788127412090567,
+        "high->branch": 2.0490888111773007,
+        "high->A": 40.838491132768944,
+        "branch->extend": 28.87016010618408,
+        "branch->finish": 18.50322134895641,
+        "stall->finish": 31.788127412090567,
+        "A->t": 55.31742952804394,
+        "extend->A": 14.478938395274994,
+        "extend->B": 14.391221710909086,
+        "finish->B": 25.427715909108443,
+        "finish->C": 24.86363285193853,
+        "B->t": 39.81893762001753,
+        "C->t": 24.86363285193853
+      },
+      "profile": {
+        "A": 0.46097857940036613,
+        "B": 0.33182448016681276,
+        "C": 0.20719694043282108
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 3.552713678800501e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 39243.958467998156
+    },
+    "CWQ": {
+      "method": "CWQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 38.41361696144627,
+        "core->branch": 57.18997810426599,
+        "core->stall": 24.396404934287737,
+        "high->branch": 4.203039115671809e-17,
+        "high->A": 38.41361696144627,
+        "branch->extend": 35.99303078907673,
+        "branch->finish": 21.196947315189266,
+        "stall->finish": 24.396404934287737,
+        "A->t": 49.31549957093753,
+        "extend->A": 10.901882609491263,
+        "extend->B": 25.091148179585463,
+        "finish->B": 17.620910006698537,
+        "finish->C": 27.972442242778467,
+        "B->t": 42.712058186284,
+        "C->t": 27.972442242778467
+      },
+      "profile": {
+        "A": 0.41096249642447946,
+        "B": 0.3559338182190333,
+        "C": 0.23310368535648723
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 3.552713678800501e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 455.1351155048998
+    },
+    "SU": {
+      "method": "SU",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 33.4581577657849,
+        "core->branch": 67.89405982431566,
+        "core->stall": 18.647782409899442,
+        "high->branch": 0.0,
+        "high->A": 33.4581577657849,
+        "branch->extend": 45.53973196947978,
+        "branch->finish": 22.35432785483588,
+        "stall->finish": 18.647782409899442,
+        "A->t": 40.676118025671,
+        "extend->A": 7.217960259886108,
+        "extend->B": 38.321771709593676,
+        "finish->B": 11.598808744128137,
+        "finish->C": 29.403301520607187,
+        "B->t": 49.92058045372181,
+        "C->t": 29.403301520607187
+      },
+      "profile": {
+        "A": 0.338967650213925,
+        "B": 0.41600483711434844,
+        "C": 0.24502751267172657
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 2.6645352591003757e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 6.3319431125696495
+    },
+    "LCRQ": {
+      "method": "LCRQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 37.35962528202533,
+        "core->branch": 53.91366724015768,
+        "core->stall": 28.726707477817005,
+        "high->branch": 1.1962573806958259e-14,
+        "high->A": 37.35962528202531,
+        "branch->extend": 35.35895870263694,
+        "branch->finish": 18.55470853752075,
+        "stall->finish": 28.726707477817005,
+        "A->t": 48.066624799469686,
+        "extend->A": 10.706999517444375,
+        "extend->B": 24.65195918519256,
+        "finish->B": 18.230839811761008,
+        "finish->C": 29.050576203576746,
+        "B->t": 42.88279899695357,
+        "C->t": 29.050576203576746
+      },
+      "profile": {
+        "A": 0.40055520666224737,
+        "B": 0.3573566583079464,
+        "C": 0.24208813502980622
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 1.4210854715202004e-14,
+        "terminal_total": 0.0
+      },
+      "objective": 53367.688921738416
+    }
+  },
+  "forward_slider_example": {
+    "UQ": {
+      "method": "UQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 42.726973306778135,
+        "core->branch": 45.400822388447494,
+        "core->stall": 31.872204304774385,
+        "high->branch": 2.2261784307053225,
+        "high->A": 40.50079487607281,
+        "branch->extend": 28.99323219521334,
+        "branch->finish": 18.63376862393947,
+        "stall->finish": 31.872204304774385,
+        "A->t": 55.048065444804315,
+        "extend->A": 14.54727056873151,
+        "extend->B": 14.445961626481834,
+        "finish->B": 25.578712344439,
+        "finish->C": 24.927260584274855,
+        "B->t": 40.02467397092083,
+        "C->t": 24.927260584274855
+      },
+      "profile": {
+        "A": 0.4587338787067026,
+        "B": 0.33353894975767356,
+        "C": 0.20772717153562378
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 1.4210854715202004e-14,
+        "terminal_total": 0.0
+      },
+      "objective": 39247.54657200074
+    },
+    "CWQ": {
+      "method": "CWQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 44.310777281636284,
+        "core->branch": 49.42400990002422,
+        "core->stall": 26.265212818339496,
+        "high->branch": 3.659408086411166,
+        "high->A": 40.65136919522512,
+        "branch->extend": 32.502295451609,
+        "branch->finish": 20.581122534826388,
+        "stall->finish": 26.265212818339496,
+        "A->t": 50.49658832325737,
+        "extend->A": 9.845219128032248,
+        "extend->B": 22.657076323576753,
+        "finish->B": 14.55726402622862,
+        "finish->C": 32.28907132693726,
+        "B->t": 37.21434034980537,
+        "C->t": 32.28907132693726
+      },
+      "profile": {
+        "A": 0.42080490269381143,
+        "B": 0.31011950291504475,
+        "C": 0.26907559439114387
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 7.105427357601002e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 457.14045082968823
+    },
+    "SU": {
+      "method": "SU",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 43.153199378497376,
+        "core->branch": 54.76529343228446,
+        "core->stall": 22.08150718921817,
+        "high->branch": 6.451363871343855,
+        "high->A": 36.70183550715352,
+        "branch->extend": 39.11136552999429,
+        "branch->finish": 22.10529177363402,
+        "stall->finish": 22.08150718921817,
+        "A->t": 42.92168320441839,
+        "extend->A": 6.219847697264869,
+        "extend->B": 32.89151783272942,
+        "finish->B": 7.7081401615371075,
+        "finish->C": 36.47865880131508,
+        "B->t": 40.59965799426653,
+        "C->t": 36.47865880131508
+      },
+      "profile": {
+        "A": 0.3576806933701533,
+        "B": 0.33833048328555443,
+        "C": 0.30398882334429234
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 1.4210854715202004e-14,
+        "terminal_total": 0.0
+      },
+      "objective": 6.495036798760745
+    },
+    "LCRQ": {
+      "method": "LCRQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 43.62479324236052,
+        "core->branch": 45.97092715263394,
+        "core->stall": 30.40427960500556,
+        "high->branch": 2.5041984900048977,
+        "high->A": 41.120594752355615,
+        "branch->extend": 32.50832681344195,
+        "branch->finish": 15.966798829196888,
+        "stall->finish": 30.40427960500556,
+        "A->t": 50.97753051990728,
+        "extend->A": 9.856935767551667,
+        "extend->B": 22.65139104589028,
+        "finish->B": 14.430753347622497,
+        "finish->C": 31.940325086579954,
+        "B->t": 37.08214439351278,
+        "C->t": 31.940325086579954
+      },
+      "profile": {
+        "A": 0.4248127543325607,
+        "B": 0.3090178699459398,
+        "C": 0.2661693757214996
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 2.842170943040401e-14,
+        "terminal_total": 0.0
+      },
+      "objective": 53232.37130761716
+    }
+  },
+  "closest_baseline": {
+    "max_flow": 120.0,
+    "profile": {
+      "A": 0.2833333333333333,
+      "B": 0.23333333333333336,
+      "C": 0.48333333333333334
+    },
+    "flows": {
+      "s->input": 120.0,
+      "input->core": 120.0,
+      "core->high": 32.01992636850286,
+      "core->branch": 67.98007363149715,
+      "core->stall": 19.999999999999996,
+      "high->branch": 11.847174063889453,
+      "high->A": 20.172752304613404,
+      "branch->extend": 41.827247695386596,
+      "branch->finish": 38.0,
+      "stall->finish": 19.999999999999996,
+      "A->t": 34.0,
+      "extend->A": 13.82724769538659,
+      "extend->B": 28.000000000000004,
+      "finish->B": 6.87569850166847e-16,
+      "finish->C": 58.0,
+      "B->t": 28.000000000000004,
+      "C->t": 58.0
+    },
+    "errors": {
+      "nonnegative": 0.0,
+      "capacity": 0.0,
+      "conservation_and_total": 7.105427357601002e-15,
+      "terminal_total": 0.0
+    },
+    "squared_profile_error": 0.006666666666666673
+  },
+  "inverse": {
+    "max_flow": 120.0,
+    "target": {
+      "A": 0.25,
+      "B": 0.2,
+      "C": 0.55
+    },
+    "profile": {
+      "A": 0.25,
+      "B": 0.2,
+      "C": 0.55
+    },
+    "capacity_before": {
+      "E1": 120.0,
+      "E2": 46.0,
+      "E3": 74.0,
+      "E4": 34.0,
+      "E5": 44.0,
+      "E6": 42.0,
+      "E7": 58.0,
+      "E8": 38.0,
+      "E9": 40.0,
+      "E10": 26.0,
+      "E11": 60.0,
+      "E12": 36.0,
+      "E13": 58.0
+    },
+    "capacity_after": {
+      "E1": 120.0,
+      "E2": 46.0,
+      "E3": 74.0,
+      "E4": 34.0,
+      "E5": 44.0,
+      "E6": 42.0,
+      "E7": 58.0,
+      "E8": 38.0,
+      "E9": 40.0,
+      "E10": 26.0,
+      "E11": 60.0,
+      "E12": 36.0,
+      "E13": 66.0
+    },
+    "flows": {
+      "s->input": 120.0,
+      "input->core": 120.0,
+      "core->high": 30.0,
+      "core->branch": 62.0,
+      "core->stall": 28.0,
+      "high->branch": 0.0,
+      "high->A": 30.0,
+      "branch->extend": 24.0,
+      "branch->finish": 38.0,
+      "stall->finish": 28.0,
+      "A->t": 30.0,
+      "extend->A": 0.0,
+      "extend->B": 24.0,
+      "finish->B": 0.0,
+      "finish->C": 66.0,
+      "B->t": 24.0,
+      "C->t": 66.0
+    },
+    "solver": "scipy.SLSQP",
+    "objective": 0.019024970273483946,
+    "residuals": {
+      "flow_conservation_and_profile": 0.0,
+      "capacity": 0.0,
+      "maximum_flow": 0.0,
+      "observed_profile": 0.0
+    }
+  },
+  "forward_after_inverse": {
+    "UQ": {
+      "method": "UQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 42.88757994394624,
+        "core->branch": 45.32429264396319,
+        "core->stall": 31.788127412090567,
+        "high->branch": 2.0490888111773007,
+        "high->A": 40.838491132768944,
+        "branch->extend": 28.87016010618408,
+        "branch->finish": 18.50322134895641,
+        "stall->finish": 31.788127412090567,
+        "A->t": 55.31742952804394,
+        "extend->A": 14.478938395274994,
+        "extend->B": 14.391221710909086,
+        "finish->B": 25.427715909108443,
+        "finish->C": 24.86363285193853,
+        "B->t": 39.81893762001753,
+        "C->t": 24.86363285193853
+      },
+      "profile": {
+        "A": 0.46097857940036613,
+        "B": 0.33182448016681276,
+        "C": 0.20719694043282108
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 3.552713678800501e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 39243.958467998156
+    },
+    "CWQ": {
+      "method": "CWQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 38.008271063920844,
+        "core->branch": 57.29183728129884,
+        "core->stall": 24.699891654780316,
+        "high->branch": 0.0,
+        "high->A": 38.008271063920844,
+        "branch->extend": 35.508289750804614,
+        "branch->finish": 21.783547530494225,
+        "stall->finish": 24.699891654780316,
+        "A->t": 48.765433205762335,
+        "extend->A": 10.757162141841494,
+        "extend->B": 24.751127608963124,
+        "finish->B": 16.589022107548182,
+        "finish->C": 29.894417077726363,
+        "B->t": 41.340149716511306,
+        "C->t": 29.894417077726363
+      },
+      "profile": {
+        "A": 0.40637861004801945,
+        "B": 0.3445012476375942,
+        "C": 0.24912014231438637
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 3.552713678800501e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 453.42467385412004
+    },
+    "SU": {
+      "method": "SU",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 32.60757299855489,
+        "core->branch": 68.18937680241521,
+        "core->stall": 19.203050199029896,
+        "high->branch": 1.494971701883903e-16,
+        "high->A": 32.60757299855489,
+        "branch->extend": 44.68225558670162,
+        "branch->finish": 23.507121215713592,
+        "stall->finish": 19.203050199029896,
+        "A->t": 39.694917713101646,
+        "extend->A": 7.087344714546752,
+        "extend->B": 37.59491087215487,
+        "finish->B": 10.058091926800385,
+        "finish->C": 32.652079487943105,
+        "B->t": 47.65300279895526,
+        "C->t": 32.652079487943105
+      },
+      "profile": {
+        "A": 0.3307909809425137,
+        "B": 0.39710835665796046,
+        "C": 0.27210066239952585
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 3.552713678800501e-15,
+        "terminal_total": 0.0
+      },
+      "objective": 6.269717147642686
+    },
+    "LCRQ": {
+      "method": "LCRQ",
+      "max_flow": 120.0,
+      "flows": {
+        "s->input": 120.0,
+        "input->core": 120.0,
+        "core->high": 37.316711360331226,
+        "core->branch": 53.94341835679568,
+        "core->stall": 28.7398702828731,
+        "high->branch": 9.117554996315016e-15,
+        "high->A": 37.31671136033122,
+        "branch->extend": 35.37744109273748,
+        "branch->finish": 18.565977264058215,
+        "stall->finish": 28.7398702828731,
+        "A->t": 48.030601990135146,
+        "extend->A": 10.713890629803931,
+        "extend->B": 24.66355046293354,
+        "finish->B": 16.824143823354294,
+        "finish->C": 30.48170372357702,
+        "B->t": 41.487694286287834,
+        "C->t": 30.48170372357702
+      },
+      "profile": {
+        "A": 0.40025501658445956,
+        "B": 0.3457307857190653,
+        "C": 0.25401419769647515
+      },
+      "solver": "scipy.SLSQP",
+      "errors": {
+        "nonnegative": 0.0,
+        "capacity": 0.0,
+        "conservation_and_total": 1.4210854715202004e-14,
+        "terminal_total": 0.0
+      },
+      "objective": 53368.105685733775
+    }
+  }
+}
